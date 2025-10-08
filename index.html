@@ -1,272 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- PWA Manifest Link will be added by script -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>TracePuzzle - Single Stroke Puzzle Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #0d051c;
-            --primary-glow: #00ffff; /* Cyan for Title, UI, and Player Trace */
-            --secondary-glow: #ff00ff; /* Magenta for Accent/Badge */
-            --node-color: #ffff00; /* Yellow for Dots */
-            --text-glow-color: #00ff00; /* Green for Stats */
-            --guide-color: rgba(0, 255, 255, 0.25); /* Faint Cyan for Guides */
+            --primary-glow: #00ffff;
+            --secondary-glow: #ff00ff;
+            --node-color: #ffff00;
+            --text-glow-color: #00ff00;
             --text-color: #f0f0f0;
-            --pulse-duration: 2s;
         }
 
-        /* General Body Styling */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Orbitron', sans-serif;
+        body{
+            margin:0;
+            padding:0;
+            font-family:'Orbitron',sans-serif;
             background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow: hidden;
-            text-align: center;
+            color:var(--text-color);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            min-height:100vh;
+            overflow:hidden;
+            text-align:center;
         }
-        
-        /* Splash Screen Styling */
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-color);
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+
+        #splash-screen{
+            position:fixed; top:0; left:0; width:100%; height:100%;
+            background:var(--bg-color);
+            z-index:2000;
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
             transition: opacity 1s ease-out, visibility 1s ease-out;
-            opacity: 1;
-            visibility: visible;
+            opacity:1; visibility:visible;
         }
-        
-        #splash-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
+        #splash-screen.hidden{ opacity:0; visibility:hidden; }
+        #splash-screen img{ width:150px; height:150px; margin-bottom:20px; animation:pulse-icon 2s infinite ease-in-out; }
+        #splash-screen h1{ font-size:3rem; color:var(--primary-glow); margin:0; text-shadow: 0 0 5px var(--primary-glow); }
+        #splash-screen .tagline{ font-size:1.2rem; margin-top:10px; color:var(--text-color); letter-spacing:2px; }
+        #splash-screen .author{ font-size:1rem; margin-top:30px; color:rgba(255,255,255,0.7); }
 
-        #splash-screen img {
-            width: 150px;
-            height: 150px;
-            margin-bottom: 20px;
-            animation: pulse-icon 2s infinite ease-in-out;
-        }
+        .game-container{ width:100%; max-width:500px; padding:20px; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; }
+        header{ width:100%; padding:10px 0 20px 0; }
+        h1{ font-size:2.5rem; margin:0; color:var(--primary-glow); animation:flicker 3s infinite alternate; }
+        .stats-container{ display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:10px; }
+        .stats-container p{ font-size:1.2rem; margin:0; color:var(--text-glow-color); text-shadow:0 0 5px var(--text-glow-color); }
 
-        #splash-screen h1 {
-            font-size: 3rem;
-            color: var(--primary-glow);
-            text-shadow: 0 0 5px var(--primary-glow), 0 0 10px var(--primary-glow), 0 0 20px #fff;
-            margin: 0;
-        }
-        
-        #splash-screen .tagline {
-            font-size: 1.2rem;
-            margin-top: 10px;
-            color: var(--text-color);
-            letter-spacing: 2px;
-        }
-
-        #splash-screen .author {
-            font-size: 1rem;
-            margin-top: 30px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-
-        /* Game Container */
-        .game-container {
-            width: 100%;
-            max-width: 500px;
-            padding: 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        /* Header Styling */
-        header {
-            width: 100%;
-            padding: 10px 0 20px 0;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin: 0;
-            color: var(--primary-glow);
-            text-shadow: 0 0 5px var(--primary-glow), 0 0 10px var(--primary-glow), 0 0 20px #fff;
-            animation: flicker 3s infinite alternate;
-        }
-
-        .stats-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .stats-container p {
-            font-size: 1.2rem;
-            margin: 0;
-            color: var(--text-glow-color);
-            text-shadow: 0 0 5px var(--text-glow-color);
-            transition: color 0.3s;
-        }
-
-        /* Canvas Styling */
-        #gameCanvas {
-            background-color: rgba(0, 0, 0, 0.2);
+        /* Canvas */
+        #gameCanvas{
+            background-color: rgba(0,0,0,0.2);
             border-radius: 15px;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), inset 0 0 10px rgba(0,0,0,0.5);
-            width: 100%;
+            box-shadow: 0 0 20px rgba(0,255,255,0.3), inset 0 0 10px rgba(0,0,0,0.5);
+            width:100%;
             aspect-ratio: 1/1;
-        }
-        
-        /* Footer Controls */
-        footer {
-            margin-top: 25px;
-            display: flex;
-            gap: 15px;
-            justify-content: center;
+            touch-action: none; /* prevents default touch scrolling while drawing */
         }
 
-        button {
-            font-family: 'Orbitron', sans-serif;
-            background: transparent;
-            border: 2px solid var(--primary-glow);
-            color: var(--primary-glow);
-            padding: 12px 25px;
-            font-size: 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 5px var(--primary-glow);
-            box-shadow: 0 0 10px var(--primary-glow), inset 0 0 5px rgba(0, 255, 255, 0.5);
-        }
+        footer{ margin-top:25px; display:flex; gap:15px; justify-content:center; }
 
-        button:hover, button:focus {
-            background: var(--primary-glow);
-            color: var(--bg-color);
-            box-shadow: 0 0 20px var(--primary-glow), 0 0 30px var(--primary-glow);
+        button{
+            font-family:'Orbitron',sans-serif;
+            background:transparent;
+            border:2px solid var(--primary-glow);
+            color:var(--primary-glow);
+            padding:12px 25px;
+            font-size:1rem;
+            border-radius:10px;
+            cursor:pointer;
+            transition:all 0.3s ease;
+            text-shadow:0 0 5px var(--primary-glow);
+            box-shadow:0 0 10px var(--primary-glow), inset 0 0 5px rgba(0,255,255,0.5);
         }
+        button:hover, button:focus { background:var(--primary-glow); color:var(--bg-color); box-shadow:0 0 20px var(--primary-glow); }
+        button:active{ transform:scale(0.95); }
 
-        button:active {
-            transform: scale(0.95);
+        #badge-button{
+            padding:5px 15px; font-size:0.9rem; border-color:var(--secondary-glow); color:var(--secondary-glow);
+            text-shadow:0 0 5px var(--secondary-glow);
         }
-        
-        /* Badge button is now smaller and in the header */
-        #badge-button {
-             padding: 5px 15px;
-             font-size: 0.9rem;
-             border-color: var(--secondary-glow);
-             color: var(--secondary-glow);
-             text-shadow: 0 0 5px var(--secondary-glow);
-             box-shadow: 0 0 10px var(--secondary-glow), inset 0 0 5px rgba(255, 0, 255, 0.5);
-        }
+        #badge-button:hover, #badge-button:focus { background:var(--secondary-glow); color:var(--bg-color); }
 
-        #badge-button:hover, #badge-button:focus {
-            background: var(--secondary-glow);
-            color: var(--bg-color);
-            box-shadow: 0 0 20px var(--secondary-glow), 0 0 30px var(--secondary-glow);
-        }
+        #start-over-button { display: none; }
 
-        #start-over-button {
-            display: none; /* Hidden by default */
+        .modal-overlay{
+            position:fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            display:none; align-items:center; justify-content:center; z-index:1000;
         }
+        .modal-content{
+            background: var(--bg-color); padding:30px; border-radius:15px; border:2px solid var(--primary-glow);
+            box-shadow:0 0 20px var(--primary-glow); text-align:center;
+        }
+        .modal-content h2{ margin-top:0; color:var(--primary-glow); }
+        .modal-content p{ color: var(--text-color); margin-bottom: 25px; }
+        .modal-buttons { display: flex; justify-content: center; gap: 15px; }
+        .modal-content input{ width:100%; padding:10px; margin-top:15px; margin-bottom:20px; border-radius:8px; border:1px solid #ff00ff; background: rgba(0,0,0,0.3); color:var(--text-color); font-family:'Orbitron'; font-size:1rem; box-sizing:border-box; }
 
-
-        /* Modal Styling */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            display: none; /* Initially hidden */
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: var(--bg-color);
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px solid var(--primary-glow);
-            box-shadow: 0 0 20px var(--primary-glow);
-            text-align: center;
-        }
-        
-        .modal-content h2 {
-            margin-top: 0;
-            color: var(--primary-glow);
-        }
-        
-        .modal-content p {
-            color: var(--text-color);
-            margin-bottom: 25px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: 10px;
-            margin-top: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            border: 1px solid var(--secondary-glow);
-            background: rgba(0,0,0,0.3);
-            color: var(--text-color);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-        
-        /* Animations */
         @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% {
-                text-shadow:
-                0 0 4px #fff,
-                0 0 11px var(--primary-glow),
-                0 0 19px var(--primary-glow),
-                0 0 40px var(--primary-glow),
-                0 0 80px var(--primary-glow);
-            }
-            20%, 24%, 55% {       
-                text-shadow: none;
-            }
+            0%,18%,22%,25%,53%,57%,100%{ text-shadow: 0 0 4px #fff, 0 0 11px var(--primary-glow), 0 0 19px var(--primary-glow); }
+            20%,24%,55%{ text-shadow:none; }
         }
-        
-        @keyframes pulse-icon {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
+        @keyframes pulse-icon { 0%{transform:scale(1);} 50%{transform:scale(1.05);} 100%{transform:scale(1);} }
     </style>
 </head>
 <body>
-    
     <div id="splash-screen">
         <img src="https://raw.githubusercontent.com/Mirjan-Ali-Sha/tracepuzzle/main/TracePuzzle-icon.png" alt="TracePuzzle Icon">
         <h1>TracePuzzle</h1>
@@ -278,9 +120,9 @@
         <header>
             <h1>TracePuzzle</h1>
             <div class="stats-container">
-                 <p id="level-indicator">Level 1</p>
-                 <button id="badge-button">Get Badge</button>
-                 <p id="score-indicator">Score: 0</p>
+                <p id="level-indicator">Level 1</p>
+                <button id="badge-button">Get Badge</button>
+                <p id="score-indicator">Score: 0</p>
             </div>
         </header>
 
@@ -291,7 +133,7 @@
             <button id="start-over-button">Start Over</button>
         </footer>
     </div>
-    
+
     <!-- Badge Modal -->
     <div id="badge-modal" class="modal-overlay">
         <div class="modal-content">
@@ -300,7 +142,7 @@
             <button id="save-badge-button">Save Badge</button>
         </div>
     </div>
-    
+
     <!-- Game Over Modal -->
     <div id="game-over-modal" class="modal-overlay">
         <div class="modal-content">
@@ -313,8 +155,8 @@
         </div>
     </div>
 
-
     <script>
+        // DOM refs
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const levelIndicator = document.getElementById('level-indicator');
@@ -330,26 +172,26 @@
         const playAgainButton = document.getElementById('play-again-button');
         const getBadgeFromGameOverButton = document.getElementById('get-badge-from-game-over');
 
-        // --- Game Configuration ---
+        // config
         const NODE_RADIUS = 12;
         const LINE_WIDTH = 6;
         const PLAYER_LINE_WIDTH = 10;
-        const HIT_TOLERANCE = 25;
+        const HIT_TOLERANCE = 25; // fallback px tolerance
+        const GAME_PROGRESS_KEY = 'tracePuzzleProgress';
 
-        let scaleFactor, canvasPadding;
+        // runtime state
+        let scaleFactor = 1;
+        let canvasPadding = 0;
         let isDragging = false;
         let currentLevelIndex = 0;
         let totalScore = 0;
-        
-        let activeNode = null;
         let availableLines = [];
         let tracedLines = new Set();
-        let livePathEnd = null;
+        let livePathEnd = null; // {x,y} in canvas pixels
         let isTransitioning = false;
+        let playerPath = []; // stores node indices (the stroke)
 
-        const GAME_PROGRESS_KEY = 'tracePuzzleProgress';
-
-        // --- Level Definitions ---
+        // levels
         const levels = [
             { nodes: [{ x: 20, y: 20 }, { x: 80, y: 20 }, { x: 80, y: 80 }, { x: 20, y: 80 }], lines: [[0, 1], [1, 2], [2, 3], [3, 0]], difficulty: 10 },
             { nodes: [{ x: 50, y: 20 }, { x: 20, y: 80 }, { x: 80, y: 80 }], lines: [[0, 1], [1, 2], [2, 0]], difficulty: 10 },
@@ -360,8 +202,7 @@
             { nodes: [ { x: 10, y: 70 }, { x: 90, y: 70 }, { x: 70, y: 90 }, { x: 30, y: 90 }, { x: 50, y: 70 }, { x: 50, y: 20 }, { x: 75, y: 30 }, { x: 50, y: 40 } ], lines: [[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 5]], difficulty: 60 }
         ];
 
-        // --- Core Drawing Functions ---
-        
+        // ----- drawing helpers (FIXED) -----
         function scale(coord) {
             return canvasPadding + coord * scaleFactor;
         }
@@ -369,12 +210,10 @@
         function drawGuideLines() {
             const level = levels[currentLevelIndex];
             if (!level) return;
-            ctx.strokeStyle = 'var(--guide-color)';
+            ctx.strokeStyle = 'rgba(0, 255, 255, 0.18)'; // Direct color
             ctx.lineWidth = LINE_WIDTH;
             ctx.lineCap = 'round';
             level.lines.forEach(line => {
-                const lineId = `${Math.min(line[0], line[1])}-${Math.max(line[0], line[1])}`;
-                if (tracedLines.has(lineId)) return;
                 const p1 = level.nodes[line[0]];
                 const p2 = level.nodes[line[1]];
                 ctx.beginPath();
@@ -387,80 +226,73 @@
         function drawNodes(pulse) {
             const level = levels[currentLevelIndex];
             if (!level) return;
+            const nodeColor = '#ffff00'; // Direct color
             level.nodes.forEach((node, index) => {
                 const radius = NODE_RADIUS + 2 * Math.sin(pulse + index);
                 ctx.beginPath();
                 ctx.arc(scale(node.x), scale(node.y), radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'var(--node-color)';
-                ctx.shadowColor = 'var(--node-color)';
+                ctx.fillStyle = nodeColor;
+                ctx.shadowColor = nodeColor;
                 ctx.shadowBlur = 20;
-                if(index === activeNode) {
-                    ctx.shadowBlur = 30;
+                if (playerPath.length > 0 && index === playerPath[playerPath.length - 1]) {
+                    ctx.shadowBlur = 35; // Brighter highlight
                 }
                 ctx.fill();
             });
             ctx.shadowBlur = 0;
         }
 
-        function drawPlayerPath() {
-            if (tracedLines.size === 0) return;
-            const level = levels[currentLevelIndex];
-            if (!level) return;
-            ctx.strokeStyle = 'var(--primary-glow)';
+        function drawPlayerTrace() {
+            if (!levels[currentLevelIndex] || playerPath.length < 1) return;
+
+            const traceColor = '#ff00ff'; // Vibrant magenta
+            ctx.strokeStyle = traceColor;
             ctx.lineWidth = PLAYER_LINE_WIDTH;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
-            ctx.shadowColor = 'var(--primary-glow)';
+            ctx.shadowColor = traceColor;
             ctx.shadowBlur = 15;
-            
-            tracedLines.forEach(lineId => {
-                const [from, to] = lineId.split('-').map(Number);
-                const p1 = level.nodes[from];
-                const p2 = level.nodes[to];
-                ctx.beginPath();
-                ctx.moveTo(scale(p1.x), scale(p1.y));
-                ctx.lineTo(scale(p2.x), scale(p2.y));
-                ctx.stroke();
-            });
 
-            ctx.shadowBlur = 0;
-        }
-        
-        function drawLivePath() {
-            if (activeNode === null || !livePathEnd) return;
-            const level = levels[currentLevelIndex];
-            if (!level) return;
-            const lastNode = level.nodes[activeNode];
-            ctx.strokeStyle = 'var(--primary-glow)';
-            ctx.lineWidth = PLAYER_LINE_WIDTH;
-            ctx.lineCap = 'round';
-            ctx.shadowColor = 'var(--primary-glow)';
-            ctx.shadowBlur = 15;
+            // Draw the completed path segments
             ctx.beginPath();
-            ctx.moveTo(scale(lastNode.x), scale(lastNode.y));
-            ctx.lineTo(livePathEnd.x, livePathEnd.y);
+            const firstNode = levels[currentLevelIndex].nodes[playerPath[0]];
+            ctx.moveTo(scale(firstNode.x), scale(firstNode.y));
+            for (let i = 1; i < playerPath.length; i++) {
+                const node = levels[currentLevelIndex].nodes[playerPath[i]];
+                ctx.lineTo(scale(node.x), scale(node.y));
+            }
             ctx.stroke();
+
+            // live line to cursor while dragging
+            if (isDragging && livePathEnd) {
+                const lastNode = levels[currentLevelIndex].nodes[playerPath[playerPath.length - 1]];
+                ctx.beginPath();
+                ctx.moveTo(scale(lastNode.x), scale(lastNode.y));
+                ctx.lineTo(livePathEnd.x, livePathEnd.y);
+                ctx.stroke();
+            }
+
             ctx.shadowBlur = 0;
         }
 
-        // --- Game Logic & State Management ---
+
+        // ----- game logic -----
         function saveProgress() {
-            const progress = {
-                level: currentLevelIndex,
-                score: totalScore
-            };
+            const progress = { level: currentLevelIndex, score: totalScore };
             localStorage.setItem(GAME_PROGRESS_KEY, JSON.stringify(progress));
         }
 
         function loadProgress() {
-            const savedData = localStorage.getItem(GAME_PROGRESS_KEY);
-            if (savedData) {
-                const progress = JSON.parse(savedData);
-                currentLevelIndex = progress.level || 0;
-                totalScore = progress.score || 0;
+            const saved = localStorage.getItem(GAME_PROGRESS_KEY);
+            if (saved) {
+                try {
+                    const obj = JSON.parse(saved);
+                    currentLevelIndex = obj.level || 0;
+                    totalScore = obj.score || 0;
+                } catch (e) { /* ignore corrupted data */ }
             }
         }
-        
+
         function updateUI() {
             if (currentLevelIndex >= levels.length) {
                 levelIndicator.textContent = "All Levels Done!";
@@ -468,60 +300,60 @@
                 resetButton.style.display = 'none';
             } else {
                 levelIndicator.textContent = `Level ${currentLevelIndex + 1}`;
+                startOverButton.style.display = 'none';
+                resetButton.style.display = 'block';
             }
             scoreIndicator.textContent = `Score: ${totalScore}`;
         }
 
         function setupLevel(levelIndex) {
-            currentLevelIndex = levelIndex;
+            currentLevelIndex = levelIndex % levels.length;
+            playerPath = [];
             tracedLines.clear();
-            activeNode = null;
+            availableLines = [];
             livePathEnd = null;
             isDragging = false;
-            startOverButton.style.display = 'none';
-            resetButton.style.display = 'block';
-
-            if (currentLevelIndex >= levels.length) {
-                updateUI();
-                isTransitioning = false;
-                return;
-            }
-            updateUI();
-            levelIndicator.style.color = 'var(--text-glow-color)';
+            isTransitioning = false;
+            
             const level = levels[currentLevelIndex];
-            availableLines = [];
             level.lines.forEach(line => {
                 const [n1, n2] = line;
                 availableLines.push({ from: n1, to: n2 });
                 availableLines.push({ from: n2, to: n1 });
             });
-            isTransitioning = false;
+
+            updateUI();
         }
-        
+
         function resizeCanvas() {
             const containerWidth = canvas.parentElement.clientWidth;
-            canvas.width = containerWidth;
-            canvas.height = containerWidth;
-            canvasPadding = canvas.width * 0.1;
-            const drawableArea = canvas.width - (canvasPadding * 2);
-            scaleFactor = drawableArea / 100;
+            canvas.width = Math.round(containerWidth);
+            canvas.height = Math.round(containerWidth);
+            canvasPadding = canvas.width * 0.10;
+            const drawableArea = canvas.width - canvasPadding * 2;
+            scaleFactor = drawableArea / 100; // because nodes use 0..100 coords
         }
 
         function getMousePos(evt) {
             const rect = canvas.getBoundingClientRect();
-            const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
-            const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
-            return { x: clientX - rect.left, y: clientY - rect.top };
+            const isTouch = !!evt.touches;
+            const clientX = isTouch ? evt.touches[0].clientX : evt.clientX;
+            const clientY = isTouch ? evt.touches[0].clientY : evt.clientY;
+
+            const x = (clientX - rect.left) * (canvas.width / rect.width);
+            const y = (clientY - rect.top) * (canvas.height / rect.height);
+            return { x, y };
         }
 
         function getNodeAtPos(pos) {
-            if (!levels[currentLevelIndex]) return -1;
             const level = levels[currentLevelIndex];
+            if (!level) return -1;
+            const tol = Math.max(HIT_TOLERANCE, NODE_RADIUS * 1.4);
             for (let i = 0; i < level.nodes.length; i++) {
                 const node = level.nodes[i];
                 const dx = pos.x - scale(node.x);
                 const dy = pos.y - scale(node.y);
-                if (Math.sqrt(dx * dx + dy * dy) < HIT_TOLERANCE) {
+                if (Math.sqrt(dx * dx + dy * dy) < tol) {
                     return i;
                 }
             }
@@ -531,220 +363,192 @@
         function isConnectionValid(fromNodeIdx, toNodeIdx) {
             const lineId = `${Math.min(fromNodeIdx, toNodeIdx)}-${Math.max(fromNodeIdx, toNodeIdx)}`;
             if (tracedLines.has(lineId)) return false;
-            return availableLines.some(line => line.from === fromNodeIdx && line.to === toNodeIdx);
-        }
-        
-        function hasValidMoves(nodeIndex) {
-            const level = levels[currentLevelIndex];
-            if (!level) return false;
-            for (const line of level.lines) {
-                const lineId = `${Math.min(line[0], line[1])}-${Math.max(line[0], line[1])}`;
-                if (!tracedLines.has(lineId)) {
-                    if (line[0] === nodeIndex || line[1] === nodeIndex) {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return availableLines.some(l => l.from === fromNodeIdx && l.to === toNodeIdx);
         }
 
-        // --- Event Handlers ---
+        // ----- input handlers (FIXED) -----
         function handleInputDown(evt) {
-            evt.preventDefault();
-            if (isTransitioning || currentLevelIndex >= levels.length) return;
-            const pos = getMousePos(evt);
-            const targetNodeIndex = getNodeAtPos(pos);
-
-            if (targetNodeIndex !== -1) {
-                if (activeNode === null) {
-                    activeNode = targetNodeIndex;
-                    isDragging = true;
-                } else {
-                    if (isConnectionValid(activeNode, targetNodeIndex)) {
-                        const lineId = `${Math.min(activeNode, targetNodeIndex)}-${Math.max(activeNode, targetNodeIndex)}`;
-                        tracedLines.add(lineId);
-                        activeNode = targetNodeIndex;
-                        isDragging = true;
-
-                        if (tracedLines.size === levels[currentLevelIndex].lines.length) {
-                            handleWin();
-                        } else if (!hasValidMoves(activeNode)) {
-                            handleGameOver();
-                        }
-                    }
-                }
-            } else {
-                activeNode = null;
-                isDragging = false;
-            }
-        }
-        
-        function handleInputMove(evt) {
             evt.preventDefault();
             if (isTransitioning) return;
             const pos = getMousePos(evt);
-            livePathEnd = pos; 
+            const nodeIndex = getNodeAtPos(pos);
 
-            if (!isDragging) return; 
+            if (nodeIndex !== -1) {
+                playerPath = [nodeIndex];
+                isDragging = true;
+                tracedLines.clear();
+            }
+        }
+
+        function handleInputMove(evt) {
+            if (!isDragging || isTransitioning) return;
+            evt.preventDefault();
+
+            const pos = getMousePos(evt);
+            livePathEnd = pos;
 
             const targetNodeIndex = getNodeAtPos(pos);
-            if (targetNodeIndex !== -1 && activeNode !== null && targetNodeIndex !== activeNode) {
-                if (isConnectionValid(activeNode, targetNodeIndex)) {
-                     const lineId = `${Math.min(activeNode, targetNodeIndex)}-${Math.max(activeNode, targetNodeIndex)}`;
-                    tracedLines.add(lineId);
-                    activeNode = targetNodeIndex;
+            const lastNode = playerPath[playerPath.length - 1];
 
+            if (targetNodeIndex !== -1 && targetNodeIndex !== lastNode) {
+                if (isConnectionValid(lastNode, targetNodeIndex)) {
+                    const lineId = `${Math.min(lastNode, targetNodeIndex)}-${Math.max(lastNode, targetNodeIndex)}`;
+                    tracedLines.add(lineId);
+                    playerPath.push(targetNodeIndex);
+                    
                     if (tracedLines.size === levels[currentLevelIndex].lines.length) {
                         handleWin();
-                    } else if (!hasValidMoves(activeNode)) {
-                        handleGameOver();
                     }
                 }
             }
         }
-        
+
         function handleInputUp(evt) {
+            if (isTransitioning) return;
             evt.preventDefault();
+            
+            if (isDragging && tracedLines.size < levels[currentLevelIndex].lines.length) {
+                handleGameOver();
+            }
+            
             isDragging = false;
+            livePathEnd = null;
         }
 
+
+        // ----- win / gameover -----
         function handleWin() {
             if (isTransitioning) return;
             isTransitioning = true;
-            activeNode = null;
             isDragging = false;
             livePathEnd = null;
             levelIndicator.textContent = "Level Complete!";
-            levelIndicator.style.color = 'var(--primary-glow)';
+            levelIndicator.style.color = '#00ffff';
             totalScore += levels[currentLevelIndex].difficulty;
+            saveProgress();
             setTimeout(() => {
                 setupLevel(currentLevelIndex + 1);
-                saveProgress();
-            }, 1500);
+            }, 1200);
         }
-        
+
         function handleGameOver() {
             if (isTransitioning) return;
             isTransitioning = true;
-            activeNode = null;
             isDragging = false;
             gameOverModal.style.display = 'flex';
         }
-        
-        // --- Badge Generation ---
-        badgeButton.addEventListener('click', () => {
-            badgeModal.style.display = 'flex';
-        });
 
-        badgeModal.addEventListener('click', (e) => {
-             if (e.target === badgeModal) {
-                 badgeModal.style.display = 'none';
-             }
-        });
-        
+        // ----- badge generation -----
+        badgeButton.addEventListener('click', () => badgeModal.style.display = 'flex');
+        badgeModal.addEventListener('click', (e) => { if (e.target === badgeModal) badgeModal.style.display = 'none'; });
+
         saveBadgeButton.addEventListener('click', () => {
-            const playerName = playerNameInput.value || 'Anonymous';
-            generateBadge(playerName);
+            const name = playerNameInput.value || 'Anonymous';
+            generateBadge(name);
             badgeModal.style.display = 'none';
         });
 
         function generateBadge(playerName) {
+            const W = 500, H = 300;
             const badgeCanvas = document.createElement('canvas');
-            badgeCanvas.width = 500;
-            badgeCanvas.height = 300;
-            const badgeCtx = badgeCanvas.getContext('2d');
+            badgeCanvas.width = W; badgeCanvas.height = H;
+            const bctx = badgeCanvas.getContext('2d');
 
-            const gradient = badgeCtx.createLinearGradient(0, 0, 0, 300);
-            gradient.addColorStop(0, '#1b2735');
-            gradient.addColorStop(1, '#090a0f');
-            badgeCtx.fillStyle = gradient;
-            badgeCtx.fillRect(0, 0, 500, 300);
-            
-            badgeCtx.strokeStyle = 'var(--primary-glow)';
-            badgeCtx.lineWidth = 4;
-            badgeCtx.strokeRect(2, 2, 496, 296);
+            const grad = bctx.createLinearGradient(0, 0, 0, H);
+            grad.addColorStop(0, '#1b2735'); grad.addColorStop(1, '#090a0f');
+            bctx.fillStyle = grad;
+            bctx.fillRect(0, 0, W, H);
+
+            bctx.lineWidth = 4;
+            bctx.strokeStyle = '#00ffff';
+            bctx.strokeRect(2, 2, W - 4, H - 4);
 
             const icon = new Image();
             icon.crossOrigin = "Anonymous";
             icon.src = 'https://raw.githubusercontent.com/Mirjan-Ali-Sha/tracepuzzle/main/TracePuzzle-icon.png';
             icon.onload = () => {
-                badgeCtx.drawImage(icon, 25, 100, 100, 100);
+                bctx.drawImage(icon, 25, 90, 100, 100);
 
-                badgeCtx.font = "bold 40px Orbitron";
-                badgeCtx.fillStyle = 'var(--primary-glow)';
-                badgeCtx.textAlign = 'center';
-                badgeCtx.shadowColor = 'var(--primary-glow)';
-                badgeCtx.shadowBlur = 10;
-                badgeCtx.fillText("TracePuzzle", 250, 60);
+                bctx.font = "bold 36px Orbitron, sans-serif";
+                bctx.textAlign = 'center';
+                bctx.fillStyle = '#00ffff';
+                bctx.shadowColor = '#00ffff';
+                bctx.shadowBlur = 10;
+                bctx.fillText("TracePuzzle", W / 2, 60);
 
-                badgeCtx.shadowBlur = 5;
-                badgeCtx.font = "24px Orbitron";
-                badgeCtx.fillStyle = '#fff';
-                badgeCtx.textAlign = 'left';
-                badgeCtx.fillText(`Player: ${playerName}`, 160, 130);
+                bctx.shadowBlur = 5;
+                bctx.font = "22px Orbitron, sans-serif";
+                bctx.textAlign = 'left';
+                bctx.fillStyle = '#ffffff';
+                bctx.fillText(`Player: ${playerName}`, 160, 130);
 
-                badgeCtx.font = "20px Orbitron";
-                badgeCtx.fillStyle = 'var(--secondary-glow)';
-                
-                const levelsCompleted = currentLevelIndex >= levels.length ? levels.length : currentLevelIndex;
-                badgeCtx.fillText(`Score: ${totalScore}`, 160, 170);
-                badgeCtx.fillText(`Levels Completed: ${levelsCompleted}`, 160, 200);
+                bctx.font = "18px Orbitron, sans-serif";
+                bctx.fillStyle = '#ff00ff';
+                const levelsCompleted = Math.min(currentLevelIndex, levels.length);
+                bctx.fillText(`Score: ${totalScore}`, 160, 165);
+                bctx.fillText(`Levels Completed: ${levelsCompleted}`, 160, 195);
 
-                badgeCtx.font = "16px Orbitron";
-                badgeCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                badgeCtx.fillText(`Game by: Mirjan Ali Sha`, 160, 230);
-                
+                bctx.font = "14px Orbitron, sans-serif";
+                bctx.fillStyle = 'rgba(255,255,255,0.8)';
+                bctx.fillText(`Game by: Mirjan Ali Sha`, 160, 230);
+
                 const link = document.createElement('a');
                 link.download = `TracePuzzle-Badge-${playerName}.png`;
-                link.href = badgeCanvas.toDataURL();
+                link.href = badgeCanvas.toDataURL('image/png');
                 link.click();
             };
-            icon.onerror = () => {
-                alert("Could not load badge icon. Please check your internet connection.");
-            }
+            icon.onerror = () => alert("Could not load badge icon.");
         }
 
+        // game over modal handlers
+        playAgainButton.addEventListener('click', () => {
+            gameOverModal.style.display = 'none';
+            isTransitioning = false;
+            setupLevel(currentLevelIndex);
+        });
+        getBadgeFromGameOverButton.addEventListener('click', () => {
+            gameOverModal.style.display = 'none';
+            badgeModal.style.display = 'flex';
+            isTransitioning = false;
+        });
 
-        // --- Animation Loop ---
-        let lastTime = 0;
-        let pulse = 0;
-        function animate(timestamp) {
-            const deltaTime = (timestamp - lastTime) || 0;
-            lastTime = timestamp;
-            pulse += deltaTime * 0.002;
+        // ----- animation loop -----
+        let lastTime = 0, pulse = 0;
+        function animate(ts) {
+            const delta = ts - lastTime || 0; lastTime = ts;
+            pulse += delta * 0.002;
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
+
             if (currentLevelIndex < levels.length) {
                 drawGuideLines();
-                drawPlayerPath();
-                drawLivePath();
+                drawPlayerTrace();
                 drawNodes(pulse);
             } else {
-                ctx.font = `bold ${scaleFactor*8}px Orbitron`;
-                ctx.fillStyle = 'var(--primary-glow)';
+                ctx.font = `bold ${Math.max(16, scaleFactor * 8)}px Orbitron, sans-serif`;
+                ctx.fillStyle = '#00ffff';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.shadowColor = 'var(--primary-glow)';
+                ctx.shadowColor = '#00ffff';
                 ctx.shadowBlur = 10;
                 ctx.fillText('YOU WIN!', canvas.width / 2, canvas.height / 2);
                 ctx.shadowBlur = 0;
             }
-            
+
             requestAnimationFrame(animate);
         }
-        
-        // --- PWA & Initialization ---
+
+        // ----- PWA / service worker helper -----
         function setupPWA() {
             const manifest = {
-                "name": "TracePuzzle Game",
-                "short_name": "TracePuzzle",
-                "start_url": window.location.href,
-                "display": "standalone",
-                "background_color": "#0d051c",
-                "theme_color": "#00ffff",
-                "orientation": "portrait-primary",
-                "icons": [{"src": "https://raw.githubusercontent.com/Mirjan-Ali-Sha/tracepuzzle/main/TracePuzzle-icon.png", "type": "image/png", "sizes": "512x512" }]
+                name: "TracePuzzle Game",
+                short_name: "TracePuzzle",
+                start_url: window.location.href,
+                display: "standalone",
+                background_color: "#0d051c",
+                theme_color: "#00ffff",
+                orientation: "portrait-primary",
+                icons: [{ src: "https://raw.githubusercontent.com/Mirjan-Ali-Sha/tracepuzzle/main/TracePuzzle-icon.png", type: "image/png", sizes: "512x512"}]
             };
             const manifestURL = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
             const link = document.createElement('link');
@@ -760,8 +564,12 @@
                         'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap',
                         'https://raw.githubusercontent.com/Mirjan-Ali-Sha/tracepuzzle/main/TracePuzzle-icon.png'
                     ];
-                    self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); });
-                    self.addEventListener('fetch', e => { e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))); });
+                    self.addEventListener('install', e => {
+                        e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache)));
+                    });
+                    self.addEventListener('fetch', e => {
+                        e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+                    });
                     self.addEventListener('activate', e => {
                         const cacheWhitelist = [CACHE_NAME];
                         e.waitUntil(caches.keys().then(names => Promise.all(names.map(name => {
@@ -773,56 +581,38 @@
                 const swURL = URL.createObjectURL(swBlob);
                 navigator.serviceWorker.register(swURL)
                     .then(() => console.log('Service Worker registered successfully.'))
-                    .catch(error => console.log('Service Worker registration failed:', error));
+                    .catch(err => console.log('Service Worker registration failed:', err));
             }
         }
-        
-        // Window Load Event to handle splash screen
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                splashScreen.classList.add('hidden');
-            }, 3500);
-        });
 
+        // ----- event wiring -----
+        canvas.addEventListener('contextmenu', e => e.preventDefault());
 
-        window.addEventListener('resize', resizeCanvas);
-        // Bind event handlers
+        // Mouse
         canvas.addEventListener('mousedown', handleInputDown);
-        canvas.addEventListener('mousemove', handleInputMove);
+        window.addEventListener('mousemove', handleInputMove);
         window.addEventListener('mouseup', handleInputUp);
-        canvas.addEventListener('touchstart', handleInputDown, { passive: false });
-        canvas.addEventListener('touchmove', handleInputMove, { passive: false });
+
+        // Touch
+        canvas.addEventListener('touchstart', handleInputDown, {passive:false});
+        window.addEventListener('touchmove', handleInputMove, {passive:false});
         window.addEventListener('touchend', handleInputUp);
-        
-        resetButton.addEventListener('click', () => {
-            if (isTransitioning) return;
-            setupLevel(currentLevelIndex);
+
+        resetButton.addEventListener('click', () => { if (!isTransitioning) setupLevel(currentLevelIndex); });
+        startOverButton.addEventListener('click', () => { currentLevelIndex = 0; totalScore = 0; saveProgress(); setupLevel(0); });
+
+        // splash hide after short time
+        window.addEventListener('load', () => {
+            setTimeout(() => splashScreen.classList.add('hidden'), 1800);
         });
 
-        startOverButton.addEventListener('click', () => {
-            currentLevelIndex = 0;
-            totalScore = 0;
-            saveProgress();
-            setupLevel(0);
-        });
-        
-        playAgainButton.addEventListener('click', () => {
-            gameOverModal.style.display = 'none';
-            setupLevel(currentLevelIndex);
-        });
-
-        getBadgeFromGameOverButton.addEventListener('click', () => {
-            gameOverModal.style.display = 'none';
-            badgeModal.style.display = 'flex';
-        });
-
-        // Initialize Game
+        // init
         loadProgress();
         resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
         setupLevel(currentLevelIndex);
         requestAnimationFrame(animate);
         setupPWA();
-
     </script>
 </body>
 </html>
