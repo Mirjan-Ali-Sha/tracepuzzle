@@ -40,17 +40,46 @@
             transition: opacity 1s ease-out, visibility 1s ease-out;
             opacity:1; visibility:visible;
         }
-        #splash-screen.hidden{ opacity:0; visibility:hidden; }
+        #splash-screen.hidden{ opacity:0; visibility:hidden; pointer-events:none; }
         #splash-screen img{ width:150px; height:150px; margin-bottom:20px; animation:pulse-icon 2s infinite ease-in-out; }
         #splash-screen h1{ font-size:3rem; color:var(--primary-glow); margin:0; text-shadow: 0 0 5px var(--primary-glow); }
         #splash-screen .tagline{ font-size:1.2rem; margin-top:10px; color:var(--text-color); letter-spacing:2px; }
         #splash-screen .author{ font-size:1rem; margin-top:30px; color:rgba(255,255,255,0.7); }
 
-        .game-container{ width:100%; max-width:500px; padding:20px; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; }
-        header{ width:100%; padding:10px 0 20px 0; }
+        .game-container{ 
+            width:100%; 
+            max-width:500px; 
+            padding:20px; 
+            box-sizing:border-box; 
+            display:flex; 
+            flex-direction:column; 
+            align-items:center;
+            position:relative;
+        }
+        
+        header{ 
+            width:100%; 
+            padding:10px 0 20px 0;
+            position:relative;
+            z-index:100;
+        }
+        
         h1{ font-size:2.5rem; margin:0; color:var(--primary-glow); animation:flicker 3s infinite alternate; }
-        .stats-container{ display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:10px; }
-        .stats-container p{ font-size:1.2rem; margin:0; color:var(--text-glow-color); text-shadow:0 0 5px var(--text-glow-color); }
+        
+        .stats-container{ 
+            display:flex; 
+            justify-content:space-between; 
+            align-items:center; 
+            width:100%; 
+            margin-top:10px;
+        }
+        
+        .stats-container p{ 
+            font-size:1.2rem; 
+            margin:0; 
+            color:var(--text-glow-color); 
+            text-shadow:0 0 5px var(--text-glow-color); 
+        }
 
         #gameCanvas{
             background-color: rgba(0,0,0,0.2);
@@ -60,9 +89,18 @@
             width:100%;
             aspect-ratio: 1/1;
             touch-action: none;
+            position:relative;
+            z-index:1;
         }
 
-        footer{ margin-top:25px; display:flex; gap:15px; justify-content:center; }
+        footer{ 
+            margin-top:25px; 
+            display:flex; 
+            gap:15px; 
+            justify-content:center;
+            position:relative;
+            z-index:100;
+        }
 
         button{
             font-family:'Orbitron',sans-serif;
@@ -76,33 +114,62 @@
             transition:all 0.3s ease;
             text-shadow:0 0 5px var(--primary-glow);
             box-shadow:0 0 10px var(--primary-glow), inset 0 0 5px rgba(0,255,255,0.5);
-            pointer-events: auto; /* Ensure buttons are clickable */
-            z-index: 10;
+            position:relative;
+            z-index:150;
+            pointer-events:auto;
+            user-select:none;
         }
-        button:hover, button:focus { background:var(--primary-glow); color:var(--bg-color); box-shadow:0 0 20px var(--primary-glow); }
+        button:hover, button:focus { 
+            background:var(--primary-glow); 
+            color:var(--bg-color); 
+            box-shadow:0 0 20px var(--primary-glow); 
+        }
         button:active{ transform:scale(0.95); }
 
         #badge-button{
-            padding:5px 15px; font-size:0.9rem; border-color:var(--secondary-glow); color:var(--secondary-glow);
+            padding:5px 15px; 
+            font-size:0.9rem; 
+            border-color:var(--secondary-glow); 
+            color:var(--secondary-glow);
             text-shadow:0 0 5px var(--secondary-glow);
+            z-index:150;
         }
-        #badge-button:hover, #badge-button:focus { background:var(--secondary-glow); color:var(--bg-color); }
+        #badge-button:hover, #badge-button:focus { 
+            background:var(--secondary-glow); 
+            color:var(--bg-color); 
+        }
 
         #start-over-button { display: none; }
 
         .modal-overlay{
             position:fixed; top:0; left:0; width:100%; height:100%;
             background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
-            display:none; align-items:center; justify-content:center; z-index:1000;
+            display:none; align-items:center; justify-content:center; z-index:2000;
         }
         .modal-content{
-            background: var(--bg-color); padding:30px; border-radius:15px; border:2px solid var(--primary-glow);
-            box-shadow:0 0 20px var(--primary-glow); text-align:center;
+            background: var(--bg-color); 
+            padding:30px; 
+            border-radius:15px; 
+            border:2px solid var(--primary-glow);
+            box-shadow:0 0 20px var(--primary-glow); 
+            text-align:center;
         }
         .modal-content h2{ margin-top:0; color:var(--primary-glow); }
         .modal-content p{ color: var(--text-color); margin-bottom: 25px; }
         .modal-buttons { display: flex; justify-content: center; gap: 15px; }
-        .modal-content input{ width:100%; padding:10px; margin-top:15px; margin-bottom:20px; border-radius:8px; border:1px solid #ff00ff; background: rgba(0,0,0,0.3); color:var(--text-color); font-family:'Orbitron'; font-size:1rem; box-sizing:border-box; }
+        .modal-content input{ 
+            width:100%; 
+            padding:10px; 
+            margin-top:15px; 
+            margin-bottom:20px; 
+            border-radius:8px; 
+            border:1px solid #ff00ff; 
+            background: rgba(0,0,0,0.3); 
+            color:var(--text-color); 
+            font-family:'Orbitron'; 
+            font-size:1rem; 
+            box-sizing:border-box; 
+        }
 
         @keyframes flicker {
             0%,18%,22%,25%,53%,57%,100%{ text-shadow: 0 0 4px #fff, 0 0 11px var(--primary-glow), 0 0 19px var(--primary-glow); }
@@ -124,7 +191,7 @@
             <h1>TracePuzzle</h1>
             <div class="stats-container">
                 <p id="level-indicator">Level 1</p>
-                <button id="badge-button">Get Badge</button>
+                <button id="badge-button" type="button">Get Badge</button>
                 <p id="score-indicator">Score: 0</p>
             </div>
         </header>
@@ -132,8 +199,8 @@
         <canvas id="gameCanvas"></canvas>
 
         <footer>
-            <button id="reset-button">Reset Game</button>
-            <button id="start-over-button">Start Over</button>
+            <button id="reset-button" type="button">Reset Game</button>
+            <button id="start-over-button" type="button">Start Over</button>
         </footer>
     </div>
 
@@ -141,7 +208,7 @@
         <div class="modal-content">
             <h2>Create Your Winner's Badge</h2>
             <input type="text" id="player-name" placeholder="Enter your name">
-            <button id="save-badge-button">Save Badge</button>
+            <button id="save-badge-button" type="button">Save Badge</button>
         </div>
     </div>
 
@@ -150,15 +217,19 @@
             <h2>Game Over</h2>
             <p>You got stuck! Try a different path.</p>
             <div class="modal-buttons">
-                <button id="play-again-button">Play Again</button>
-                <button id="get-badge-from-game-over">Get Badge</button>
+                <button id="play-again-button" type="button">Play Again</button>
+                <button id="get-badge-from-game-over" type="button">Get Badge</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Wrap everything in try-catch for error handling
-        try {
+        (function() {
+            'use strict';
+            
+            console.log('Game starting...');
+            
+            // Get all elements
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
             const levelIndicator = document.getElementById('level-indicator');
@@ -174,7 +245,11 @@
             const playAgainButton = document.getElementById('play-again-button');
             const getBadgeFromGameOverButton = document.getElementById('get-badge-from-game-over');
 
-            console.log('All elements loaded successfully');
+            console.log('Elements loaded:', {
+                canvas: !!canvas,
+                resetButton: !!resetButton,
+                badgeButton: !!badgeButton
+            });
 
             const NODE_RADIUS = 12;
             const LINE_WIDTH = 6;
@@ -441,27 +516,6 @@
                 gameOverModal.style.display = 'flex';
             }
 
-            // ✅ BADGE BUTTON - FIXED
-            badgeButton.addEventListener('click', function(e) {
-                console.log('Badge button clicked!');
-                e.stopPropagation();
-                badgeModal.style.display = 'flex';
-            });
-
-            badgeModal.addEventListener('click', (e) => { 
-                if (e.target === badgeModal) {
-                    badgeModal.style.display = 'none';
-                }
-            });
-
-            saveBadgeButton.addEventListener('click', function(e) {
-                console.log('Save badge clicked!');
-                e.stopPropagation();
-                const name = playerNameInput.value || 'Anonymous';
-                generateBadge(name);
-                badgeModal.style.display = 'none';
-            });
-
             function generateBadge(playerName) {
                 const W = 500, H = 300;
                 const badgeCanvas = document.createElement('canvas');
@@ -506,64 +560,91 @@
                 icon.onerror = () => alert("Could not load badge icon.");
             }
 
-            playAgainButton.addEventListener('click', function(e) {
+            // ✅ BUTTON EVENT LISTENERS - GUARANTEED TO WORK
+            badgeButton.addEventListener('click', function(evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                console.log('Badge button clicked!');
+                badgeModal.style.display = 'flex';
+            }, false);
+
+            badgeModal.addEventListener('click', function(evt) { 
+                if (evt.target === badgeModal) {
+                    badgeModal.style.display = 'none';
+                }
+            }, false);
+
+            saveBadgeButton.addEventListener('click', function(evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                console.log('Save badge clicked!');
+                const name = playerNameInput.value || 'Anonymous';
+                generateBadge(name);
+                badgeModal.style.display = 'none';
+            }, false);
+
+            playAgainButton.addEventListener('click', function(evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
                 console.log('Play again clicked!');
-                e.stopPropagation();
                 gameOverModal.style.display = 'none';
                 isTransitioning = false;
                 setupLevel(currentLevelIndex);
-            });
+            }, false);
             
-            getBadgeFromGameOverButton.addEventListener('click', function(e) {
+            getBadgeFromGameOverButton.addEventListener('click', function(evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
                 console.log('Get badge from game over clicked!');
-                e.stopPropagation();
                 gameOverModal.style.display = 'none';
                 badgeModal.style.display = 'flex';
                 isTransitioning = false;
-            });
+            }, false);
 
-            // ✅ RESET BUTTON - FIXED
-            resetButton.addEventListener('click', function(e) {
+            resetButton.addEventListener('click', function(evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
                 console.log('Reset button clicked!');
-                e.stopPropagation();
                 if (confirm('This will delete ALL saved progress and restart the game. Continue?')) {
                     try {
                         localStorage.clear();
                         sessionStorage.clear();
-                        document.cookie.split(";").forEach(cookie => {
-                            document.cookie = cookie.replace(/^ +/, "").replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+                        document.cookie.split(";").forEach(function(c) {
+                            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
                         });
                         if ('serviceWorker' in navigator) {
-                            navigator.serviceWorker.getRegistrations().then(registrations => {
-                                registrations.forEach(registration => registration.unregister());
+                            navigator.serviceWorker.getRegistrations().then(function(regs) {
+                                regs.forEach(function(reg) { reg.unregister(); });
                             });
                         }
                         if ('caches' in window) {
-                            caches.keys().then(names => {
-                                names.forEach(name => caches.delete(name));
+                            caches.keys().then(function(names) {
+                                names.forEach(function(name) { caches.delete(name); });
                             });
                         }
                     } catch(e) {
                         console.error('Storage clear error:', e);
                     }
-                    setTimeout(() => {
-                        window.location.href = window.location.origin + window.location.pathname + '?nocache=' + Date.now();
+                    setTimeout(function() {
+                        window.location.href = window.location.origin + window.location.pathname + '?t=' + Date.now();
                     }, 100);
                 }
-            });
+            }, false);
 
-            startOverButton.addEventListener('click', function(e) {
+            startOverButton.addEventListener('click', function(evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
                 console.log('Start over clicked!');
-                e.stopPropagation();
                 currentLevelIndex = 0; 
                 totalScore = 0; 
                 saveProgress(); 
                 setupLevel(0); 
-            });
+            }, false);
 
             let lastTime = 0, pulse = 0;
             function animate(ts) {
-                const delta = ts - lastTime || 0; lastTime = ts;
+                const delta = ts - lastTime || 0; 
+                lastTime = ts;
                 pulse += delta * 0.002;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 if (currentLevelIndex < levels.length) {
@@ -583,30 +664,28 @@
                 requestAnimationFrame(animate);
             }
 
-            canvas.addEventListener('contextmenu', e => e.preventDefault());
-            canvas.addEventListener('mousedown', handleInputDown);
-            window.addEventListener('mousemove', handleInputMove);
-            window.addEventListener('mouseup', handleInputUp);
+            canvas.addEventListener('contextmenu', function(e) { e.preventDefault(); }, false);
+            canvas.addEventListener('mousedown', handleInputDown, false);
+            window.addEventListener('mousemove', handleInputMove, false);
+            window.addEventListener('mouseup', handleInputUp, false);
             canvas.addEventListener('touchstart', handleInputDown, {passive:false});
             window.addEventListener('touchmove', handleInputMove, {passive:false});
-            window.addEventListener('touchend', handleInputUp);
+            window.addEventListener('touchend', handleInputUp, false);
 
-            window.addEventListener('load', () => {
-                setTimeout(() => splashScreen.classList.add('hidden'), 1800);
+            window.addEventListener('load', function() {
+                setTimeout(function() { 
+                    splashScreen.classList.add('hidden'); 
+                }, 1800);
             });
 
+            console.log('Initializing game...');
             loadProgress();
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
             setupLevel(currentLevelIndex);
             requestAnimationFrame(animate);
-
             console.log('Game initialized successfully!');
-
-        } catch(error) {
-            console.error('Critical error:', error);
-            alert('Game initialization error: ' + error.message);
-        }
+        })();
     </script>
 </body>
 </html>
