@@ -3,10 +3,20 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="theme-color" content="#0d051c">
+    <meta name="description" content="TracePuzzle - A single stroke puzzle game. Draw all lines without lifting your finger!">
     <title>TracePuzzle - Single Stroke Puzzle Game</title>
+    
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Mirjan-Ali-Sha/tracepuzzle/main/TracePuzzle-icon.png">
+    
+    <!-- Icons for PWA -->
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Mirjan-Ali-Sha/tracepuzzle/main/TracePuzzle-icon.png">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Mirjan-Ali-Sha/tracepuzzle/main/TracePuzzle-icon.png">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" id="manifest-placeholder">
+    
     <style>
         :root {
             --bg-color: #0d051c;
@@ -155,9 +165,17 @@
         #start-over-button { display: none; }
 
         .modal-overlay{
-            position:fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
-            display:none; align-items:center; justify-content:center; z-index:2000;
+            position:fixed; 
+            top:0; 
+            left:0; 
+            width:100%; 
+            height:100%;
+            background: rgba(0,0,0,0.7); 
+            backdrop-filter: blur(5px);
+            display:none; 
+            align-items:center; 
+            justify-content:center; 
+            z-index:2000;
         }
         .modal-content{
             background: var(--bg-color); 
@@ -167,6 +185,7 @@
             box-shadow:0 0 20px var(--primary-glow); 
             text-align:center;
             max-width:90%;
+            pointer-events:auto;
         }
         .modal-content h2{ margin-top:0; color:var(--primary-glow); }
         .modal-content p{ color: var(--text-color); margin-bottom: 25px; }
@@ -242,6 +261,43 @@
             'use strict';
             
             console.log('TracePuzzle starting...');
+            
+            // ✅ SETUP PWA MANIFEST FIRST
+            function setupPWAManifest() {
+                const manifest = {
+                    name: "TracePuzzle - Single Stroke Puzzle Game",
+                    short_name: "TracePuzzle",
+                    description: "Draw all lines in a single stroke! Can you solve all 20 levels?",
+                    start_url: window.location.pathname,
+                    scope: "/",
+                    display: "standalone",
+                    background_color: "#0d051c",
+                    theme_color: "#00ffff",
+                    orientation: "portrait",
+                    icons: [
+                        {
+                            src: "https://raw.githubusercontent.com/Mirjan-Ali-Sha/tracepuzzle/main/TracePuzzle-icon.png",
+                            sizes: "192x192",
+                            type: "image/png",
+                            purpose: "any maskable"
+                        },
+                        {
+                            src: "https://raw.githubusercontent.com/Mirjan-Ali-Sha/tracepuzzle/main/TracePuzzle-icon.png",
+                            sizes: "512x512",
+                            type: "image/png",
+                            purpose: "any maskable"
+                        }
+                    ]
+                };
+                
+                const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+                const manifestURL = URL.createObjectURL(manifestBlob);
+                document.getElementById('manifest-placeholder').setAttribute('href', manifestURL);
+                console.log('PWA Manifest created');
+            }
+            
+            // Setup PWA immediately
+            setupPWAManifest();
             
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
@@ -418,6 +474,7 @@
                 }
             ];
 
+            
             function scale(coord) { return canvasPadding + coord * scaleFactor; }
 
             function drawGuideLines() {
@@ -482,10 +539,9 @@
                 ctx.shadowBlur = 0;
             }
 
-            // ✅ FIX #2: Save NEXT level (completed + 1) to prevent score duplication
             function saveProgress() {
                 try {
-                    const nextLevel = currentLevelIndex + 1; // Save next level, not current
+                    const nextLevel = currentLevelIndex + 1;
                     const progress = { level: nextLevel, score: totalScore };
                     localStorage.setItem(GAME_PROGRESS_KEY, JSON.stringify(progress));
                     console.log('Progress saved:', progress);
@@ -627,7 +683,7 @@
                 levelIndicator.textContent = "Level Complete!";
                 levelIndicator.style.color = '#00ffff';
                 totalScore += levels[currentLevelIndex].difficulty;
-                saveProgress(); // Saves next level
+                saveProgress();
                 setTimeout(() => {
                     levelCompleted = false;
                     if (currentLevelIndex + 1 < levels.length) {
@@ -690,7 +746,6 @@
                 icon.onerror = () => alert("Could not load badge icon.");
             }
 
-            // ✅ FIX #1: Add both click AND touchstart for mobile buttons
             function addButtonEvent(button, handler) {
                 button.addEventListener('click', handler, false);
                 button.addEventListener('touchstart', function(e) {
@@ -700,17 +755,29 @@
                 }, false);
             }
 
+            function addModalCloseEvent(modal) {
+                modal.addEventListener('click', function(evt) {
+                    if (evt.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                }, false);
+                
+                modal.addEventListener('touchstart', function(evt) {
+                    if (evt.target === modal) {
+                        evt.preventDefault();
+                        modal.style.display = 'none';
+                    }
+                }, false);
+            }
+
+            addModalCloseEvent(badgeModal);
+            addModalCloseEvent(gameOverModal);
+
             addButtonEvent(badgeButton, function(evt) {
                 evt.preventDefault();
                 evt.stopPropagation();
                 console.log('Badge button clicked!');
                 badgeModal.style.display = 'flex';
-            });
-
-            badgeModal.addEventListener('click', function(evt) { 
-                if (evt.target === badgeModal) {
-                    badgeModal.style.display = 'none';
-                }
             });
 
             addButtonEvent(saveBadgeButton, function(evt) {
@@ -823,7 +890,7 @@
             window.addEventListener('resize', resizeCanvas);
             setupLevel(currentLevelIndex);
             requestAnimationFrame(animate);
-            console.log('Game initialized!');
+            console.log('Game initialized - PWA ready!');
         })();
     </script>
 </body>
