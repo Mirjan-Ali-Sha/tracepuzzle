@@ -33,14 +33,26 @@
         }
 
         #splash-screen{
-            position:fixed; top:0; left:0; width:100%; height:100%;
+            position:fixed; 
+            top:0; 
+            left:0; 
+            width:100%; 
+            height:100%;
             background:var(--bg-color);
             z-index:2000;
-            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            display:flex; 
+            flex-direction:column; 
+            align-items:center; 
+            justify-content:center;
             transition: opacity 1s ease-out, visibility 1s ease-out;
-            opacity:1; visibility:visible;
+            opacity:1; 
+            visibility:visible;
         }
-        #splash-screen.hidden{ opacity:0; visibility:hidden; pointer-events:none; }
+        #splash-screen.hidden{ 
+            opacity:0; 
+            visibility:hidden; 
+            pointer-events:none; 
+        }
         #splash-screen img{ width:150px; height:150px; margin-bottom:20px; animation:pulse-icon 2s infinite ease-in-out; }
         #splash-screen h1{ font-size:3rem; color:var(--primary-glow); margin:0; text-shadow: 0 0 5px var(--primary-glow); }
         #splash-screen .tagline{ font-size:1.2rem; margin-top:10px; color:var(--text-color); letter-spacing:2px; }
@@ -118,6 +130,7 @@
             z-index:150;
             pointer-events:auto;
             user-select:none;
+            -webkit-tap-highlight-color: transparent;
         }
         button:hover, button:focus { 
             background:var(--primary-glow); 
@@ -153,10 +166,11 @@
             border:2px solid var(--primary-glow);
             box-shadow:0 0 20px var(--primary-glow); 
             text-align:center;
+            max-width:90%;
         }
         .modal-content h2{ margin-top:0; color:var(--primary-glow); }
         .modal-content p{ color: var(--text-color); margin-bottom: 25px; }
-        .modal-buttons { display: flex; justify-content: center; gap: 15px; }
+        .modal-buttons { display: flex; justify-content: center; gap: 15px; flex-wrap:wrap; }
         .modal-content input{ 
             width:100%; 
             padding:10px; 
@@ -227,9 +241,8 @@
         (function() {
             'use strict';
             
-            console.log('Game starting...');
+            console.log('TracePuzzle starting...');
             
-            // Get all elements
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
             const levelIndicator = document.getElementById('level-indicator');
@@ -244,12 +257,6 @@
             const gameOverModal = document.getElementById('game-over-modal');
             const playAgainButton = document.getElementById('play-again-button');
             const getBadgeFromGameOverButton = document.getElementById('get-badge-from-game-over');
-
-            console.log('Elements loaded:', {
-                canvas: !!canvas,
-                resetButton: !!resetButton,
-                badgeButton: !!badgeButton
-            });
 
             const NODE_RADIUS = 12;
             const LINE_WIDTH = 6;
@@ -475,10 +482,13 @@
                 ctx.shadowBlur = 0;
             }
 
+            // ✅ FIX #2: Save NEXT level (completed + 1) to prevent score duplication
             function saveProgress() {
                 try {
-                    const progress = { level: currentLevelIndex, score: totalScore };
+                    const nextLevel = currentLevelIndex + 1; // Save next level, not current
+                    const progress = { level: nextLevel, score: totalScore };
                     localStorage.setItem(GAME_PROGRESS_KEY, JSON.stringify(progress));
+                    console.log('Progress saved:', progress);
                 } catch(e) {
                     console.error('Save error:', e);
                 }
@@ -491,6 +501,7 @@
                         const obj = JSON.parse(saved);
                         currentLevelIndex = obj.level || 0;
                         totalScore = obj.score || 0;
+                        console.log('Progress loaded:', obj);
                     }
                 } catch (e) {
                     console.error('Load error:', e);
@@ -616,7 +627,7 @@
                 levelIndicator.textContent = "Level Complete!";
                 levelIndicator.style.color = '#00ffff';
                 totalScore += levels[currentLevelIndex].difficulty;
-                saveProgress();
+                saveProgress(); // Saves next level
                 setTimeout(() => {
                     levelCompleted = false;
                     if (currentLevelIndex + 1 < levels.length) {
@@ -679,48 +690,57 @@
                 icon.onerror = () => alert("Could not load badge icon.");
             }
 
-            // ✅ BUTTON EVENT LISTENERS - GUARANTEED TO WORK
-            badgeButton.addEventListener('click', function(evt) {
+            // ✅ FIX #1: Add both click AND touchstart for mobile buttons
+            function addButtonEvent(button, handler) {
+                button.addEventListener('click', handler, false);
+                button.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handler(e);
+                }, false);
+            }
+
+            addButtonEvent(badgeButton, function(evt) {
                 evt.preventDefault();
                 evt.stopPropagation();
                 console.log('Badge button clicked!');
                 badgeModal.style.display = 'flex';
-            }, false);
+            });
 
             badgeModal.addEventListener('click', function(evt) { 
                 if (evt.target === badgeModal) {
                     badgeModal.style.display = 'none';
                 }
-            }, false);
+            });
 
-            saveBadgeButton.addEventListener('click', function(evt) {
+            addButtonEvent(saveBadgeButton, function(evt) {
                 evt.preventDefault();
                 evt.stopPropagation();
                 console.log('Save badge clicked!');
                 const name = playerNameInput.value || 'Anonymous';
                 generateBadge(name);
                 badgeModal.style.display = 'none';
-            }, false);
+            });
 
-            playAgainButton.addEventListener('click', function(evt) {
+            addButtonEvent(playAgainButton, function(evt) {
                 evt.preventDefault();
                 evt.stopPropagation();
                 console.log('Play again clicked!');
                 gameOverModal.style.display = 'none';
                 isTransitioning = false;
                 setupLevel(currentLevelIndex);
-            }, false);
+            });
             
-            getBadgeFromGameOverButton.addEventListener('click', function(evt) {
+            addButtonEvent(getBadgeFromGameOverButton, function(evt) {
                 evt.preventDefault();
                 evt.stopPropagation();
                 console.log('Get badge from game over clicked!');
                 gameOverModal.style.display = 'none';
                 badgeModal.style.display = 'flex';
                 isTransitioning = false;
-            }, false);
+            });
 
-            resetButton.addEventListener('click', function(evt) {
+            addButtonEvent(resetButton, function(evt) {
                 evt.preventDefault();
                 evt.stopPropagation();
                 console.log('Reset button clicked!');
@@ -748,9 +768,9 @@
                         window.location.href = window.location.origin + window.location.pathname + '?t=' + Date.now();
                     }, 100);
                 }
-            }, false);
+            });
 
-            startOverButton.addEventListener('click', function(evt) {
+            addButtonEvent(startOverButton, function(evt) {
                 evt.preventDefault();
                 evt.stopPropagation();
                 console.log('Start over clicked!');
@@ -758,7 +778,7 @@
                 totalScore = 0; 
                 saveProgress(); 
                 setupLevel(0); 
-            }, false);
+            });
 
             let lastTime = 0, pulse = 0;
             function animate(ts) {
@@ -803,7 +823,7 @@
             window.addEventListener('resize', resizeCanvas);
             setupLevel(currentLevelIndex);
             requestAnimationFrame(animate);
-            console.log('Game initialized successfully!');
+            console.log('Game initialized!');
         })();
     </script>
 </body>
