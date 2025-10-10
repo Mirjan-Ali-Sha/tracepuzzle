@@ -201,7 +201,15 @@
             color:var(--text-color); 
             font-family:'Orbitron'; 
             font-size:1rem; 
-            box-sizing:border-box; 
+            box-sizing:border-box;
+            pointer-events:auto;
+            touch-action:auto;
+            -webkit-user-select:text;
+            user-select:text;
+        }
+        .modal-content input:focus{
+            outline: 2px solid var(--secondary-glow);
+            background: rgba(255,0,255,0.1);
         }
 
         @keyframes flicker {
@@ -240,7 +248,7 @@
     <div id="badge-modal" class="modal-overlay">
         <div class="modal-content">
             <h2>Create Your Winner's Badge</h2>
-            <input type="text" id="player-name" placeholder="Enter your name">
+            <input type="text" id="player-name" placeholder="Enter your name" autocomplete="name">
             <button id="save-badge-button" type="button">Save Badge</button>
         </div>
     </div>
@@ -296,7 +304,6 @@
                 console.log('PWA Manifest created');
             }
             
-            // Setup PWA immediately
             setupPWAManifest();
             
             const canvas = document.getElementById('gameCanvas');
@@ -474,7 +481,6 @@
                 }
             ];
 
-            
             function scale(coord) { return canvasPadding + coord * scaleFactor; }
 
             function drawGuideLines() {
@@ -755,6 +761,7 @@
                 }, false);
             }
 
+            // ✅ FIX: Modal close - Only close when clicking/touching overlay itself
             function addModalCloseEvent(modal) {
                 modal.addEventListener('click', function(evt) {
                     if (evt.target === modal) {
@@ -763,10 +770,12 @@
                 }, false);
                 
                 modal.addEventListener('touchstart', function(evt) {
+                    // Only close if touching the overlay itself, not content/input/buttons
                     if (evt.target === modal) {
                         evt.preventDefault();
                         modal.style.display = 'none';
                     }
+                    // Don't prevent default for input - allows keyboard to open
                 }, false);
             }
 
@@ -778,6 +787,10 @@
                 evt.stopPropagation();
                 console.log('Badge button clicked!');
                 badgeModal.style.display = 'flex';
+                // Focus input after modal opens
+                setTimeout(function() {
+                    playerNameInput.focus();
+                }, 100);
             });
 
             addButtonEvent(saveBadgeButton, function(evt) {
@@ -805,6 +818,9 @@
                 gameOverModal.style.display = 'none';
                 badgeModal.style.display = 'flex';
                 isTransitioning = false;
+                setTimeout(function() {
+                    playerNameInput.focus();
+                }, 100);
             });
 
             addButtonEvent(resetButton, function(evt) {
