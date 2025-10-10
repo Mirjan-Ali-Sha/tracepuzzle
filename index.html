@@ -190,179 +190,29 @@
 
         // ALL 20 LEVELS - 100% VERIFIED SOLVABLE
         const levels = [
-            // Level 1: Square
-            { 
-                nodes: [{ x: 20, y: 20 }, { x: 80, y: 20 }, { x: 80, y: 80 }, { x: 20, y: 80 }], 
-                lines: [[0, 1], [1, 2], [2, 3], [3, 0]], 
-                difficulty: 10
-            },
-            
-            // Level 2: Triangle
-            { 
-                nodes: [{ x: 50, y: 20 }, { x: 20, y: 80 }, { x: 80, y: 80 }], 
-                lines: [[0, 1], [1, 2], [2, 0]], 
-                difficulty: 10
-            },
-            
-            // Level 3: Zigzag
-            { 
-                nodes: [{ x: 20, y: 20 }, { x: 80, y: 20 }, { x: 20, y: 50 }, { x: 80, y: 50 }, { x: 20, y: 80 }, { x: 80, y: 80 }], 
-                lines: [[0, 1], [1, 3], [3, 2], [2, 4], [4, 5]], 
-                difficulty: 20
-            },
-            
-            // Level 4: Envelope
-            { 
-                nodes: [{ x: 50, y: 15 }, { x: 15, y: 40 }, { x: 85, y: 40 }, { x: 15, y: 85 }, { x: 85, y: 85 }], 
-                lines: [[0, 1], [0, 2], [1, 2], [1, 3], [2, 4], [3, 4]], 
-                difficulty: 30
-            },
-            
-            // Level 5: House
-            { 
-                nodes: [{ x: 20, y: 50 }, { x: 50, y: 20 }, { x: 80, y: 50 }, { x: 20, y: 90 }, { x: 80, y: 90 }], 
-                lines: [[0, 1], [1, 2], [2, 4], [4, 3], [3, 0], [0, 2]], 
-                difficulty: 35
-            },
-            
-            // Level 6: Double Triangle
-            { 
-                nodes: [{ x: 50, y: 10 }, { x: 20, y: 50 }, { x: 80, y: 50 }, { x: 50, y: 90 }], 
-                lines: [[0, 1], [1, 2], [2, 0], [1, 3], [3, 2]], 
-                difficulty: 40
-            },
-            
-            // Level 7: Bow Tie
-            { 
-                nodes: [{ x: 20, y: 20 }, { x: 50, y: 50 }, { x: 20, y: 80 }, { x: 80, y: 20 }, { x: 80, y: 80 }], 
-                lines: [[0, 1], [1, 2], [2, 0], [3, 1], [1, 4], [4, 3]], 
-                difficulty: 45
-            },
-            
-            // Level 8: Diamond Cross
-            { 
-                nodes: [{ x: 50, y: 10 }, { x: 20, y: 50 }, { x: 80, y: 50 }, { x: 50, y: 90 }, { x: 50, y: 50 }], 
-                lines: [[0, 1], [1, 3], [3, 2], [2, 0], [0, 4], [4, 3]], 
-                difficulty: 50
-            },
-            
-            // Level 9: Pentagon
-            { 
-                nodes: [{ x: 50, y: 10 }, { x: 85, y: 35 }, { x: 70, y: 75 }, { x: 30, y: 75 }, { x: 15, y: 35 }], 
-                lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [0, 2], [2, 4]], 
-                difficulty: 55
-            },
-            
-            // Level 10: Hexagon
-            { 
-                nodes: [{ x: 50, y: 10 }, { x: 80, y: 30 }, { x: 80, y: 70 }, { x: 50, y: 90 }, { x: 20, y: 70 }, { x: 20, y: 30 }], 
-                lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0], [0, 2], [2, 4], [4, 0]], 
-                difficulty: 60
-            },
-            
-            // Level 11: Star Pentagon
-            { 
-                nodes: [{ x: 50, y: 10 }, { x: 85, y: 35 }, { x: 70, y: 75 }, { x: 30, y: 75 }, { x: 15, y: 35 }, { x: 50, y: 45 }], 
-                lines: [[0, 2], [2, 4], [4, 1], [1, 3], [3, 0], [0, 5], [2, 5], [4, 5]], 
-                difficulty: 70
-            },
-            
-            // Level 12: Cube Face
-            { 
-                nodes: [
-                    { x: 30, y: 25 }, { x: 70, y: 25 }, { x: 85, y: 45 }, { x: 85, y: 75 },
-                    { x: 70, y: 90 }, { x: 30, y: 90 }, { x: 15, y: 75 }, { x: 15, y: 45 }
-                ], 
-                lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0], [0, 2], [2, 4], [4, 6], [6, 0]], 
-                difficulty: 80
-            },
-            
-            // Level 13: Complex Triangle
-            { 
-                nodes: [
-                    { x: 50, y: 15 }, { x: 20, y: 50 }, { x: 50, y: 40 }, 
-                    { x: 80, y: 50 }, { x: 35, y: 75 }, { x: 65, y: 75 }, { x: 50, y: 90 }
-                ], 
-                lines: [[0, 1], [1, 2], [2, 0], [0, 3], [3, 2], [1, 4], [4, 6], [6, 5], [5, 3], [2, 4]], 
-                difficulty: 85
-            },
-            
-            // Level 14: Pentagon Decagon
-            { 
-                nodes: [
-                    { x: 50, y: 10 }, { x: 65, y: 40 }, { x: 95, y: 45 }, { x: 75, y: 65 }, 
-                    { x: 80, y: 95 }, { x: 50, y: 80 }, { x: 20, y: 95 }, { x: 25, y: 65 }, 
-                    { x: 5, y: 45 }, { x: 35, y: 40 }
-                ], 
-                lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 0], [1, 3], [3, 5], [5, 7], [7, 9], [9, 1]], 
-                difficulty: 90
-            },
-            
-            // Level 15: Double House
-            { 
-                nodes: [
-                    { x: 25, y: 40 }, { x: 45, y: 20 }, { x: 65, y: 40 }, 
-                    { x: 25, y: 75 }, { x: 65, y: 75 }, { x: 85, y: 40 }, { x: 85, y: 75 }
-                ], 
-                lines: [[0, 1], [1, 2], [2, 4], [4, 3], [3, 0], [0, 2], [2, 5], [5, 6], [6, 4], [4, 2]], 
-                difficulty: 95
-            },
-            
-            // Level 16: Extended Grid
-            { 
-                nodes: [
-                    { x: 20, y: 20 }, { x: 50, y: 20 }, { x: 80, y: 20 }, 
-                    { x: 20, y: 50 }, { x: 50, y: 50 }, { x: 80, y: 50 }, 
-                    { x: 20, y: 80 }, { x: 50, y: 80 }, { x: 80, y: 80 }
-                ], 
-                lines: [[0, 1], [1, 2], [3, 4], [4, 5], [6, 7], [7, 8], [0, 3], [3, 6], [1, 4], [4, 7], [2, 5], [5, 8], [1, 5]], 
-                difficulty: 100
-            },
-            
-            // Level 17: Hexagon Web
-            { 
-                nodes: [
-                    { x: 50, y: 10 }, { x: 80, y: 30 }, { x: 80, y: 70 }, 
-                    { x: 50, y: 90 }, { x: 20, y: 70 }, { x: 20, y: 30 }
-                ], 
-                lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0], [0, 2], [2, 4], [4, 0], [1, 3], [3, 5], [5, 1]], 
-                difficulty: 110
-            },
-            
-            // Level 18: Star Web
-            { 
-                nodes: [
-                    { x: 50, y: 20 }, { x: 30, y: 40 }, { x: 20, y: 65 }, 
-                    { x: 40, y: 85 }, { x: 60, y: 85 }, { x: 80, y: 65 }, { x: 70, y: 40 }
-                ], 
-                lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 0], [0, 3], [3, 6], [1, 4], [4, 0]], 
-                difficulty: 120
-            },
-            
-            // Level 19: Triple Structure
-            { 
-                nodes: [
-                    { x: 10, y: 70 }, { x: 50, y: 70 }, { x: 70, y: 90 }, { x: 30, y: 90 }, 
-                    { x: 50, y: 30 }, { x: 30, y: 45 }, { x: 70, y: 45 }, { x: 90, y: 70 }
-                ], 
-                lines: [[0, 1], [1, 2], [2, 3], [3, 0], [1, 4], [4, 5], [5, 6], [6, 4], [1, 7], [7, 2]], 
-                difficulty: 130
-            },
-            
-            // Level 20: Ultimate Challenge
-            { 
-                nodes: [
-                    { x: 50, y: 50 }, { x: 20, y: 20 }, { x: 50, y: 10 }, { x: 80, y: 20 }, 
-                    { x: 20, y: 80 }, { x: 50, y: 90 }, { x: 80, y: 80 }
-                ], 
-                lines: [[0, 1], [1, 2], [2, 0], [0, 3], [3, 2], [0, 4], [4, 5], [5, 0], [0, 6], [6, 5]], 
-                difficulty: 150
-            }
+            { nodes: [{ x: 20, y: 20 }, { x: 80, y: 20 }, { x: 80, y: 80 }, { x: 20, y: 80 }], lines: [[0, 1], [1, 2], [2, 3], [3, 0]], difficulty: 10 },
+            { nodes: [{ x: 50, y: 20 }, { x: 20, y: 80 }, { x: 80, y: 80 }], lines: [[0, 1], [1, 2], [2, 0]], difficulty: 10 },
+            { nodes: [{ x: 20, y: 20 }, { x: 80, y: 20 }, { x: 20, y: 50 }, { x: 80, y: 50 }, { x: 20, y: 80 }, { x: 80, y: 80 }], lines: [[0, 1], [1, 3], [3, 2], [2, 4], [4, 5]], difficulty: 20 },
+            { nodes: [{ x: 50, y: 15 }, { x: 15, y: 40 }, { x: 85, y: 40 }, { x: 15, y: 85 }, { x: 85, y: 85 }], lines: [[0, 1], [0, 2], [1, 2], [1, 3], [2, 4], [3, 4]], difficulty: 30 },
+            { nodes: [{ x: 20, y: 50 }, { x: 50, y: 20 }, { x: 80, y: 50 }, { x: 20, y: 90 }, { x: 80, y: 90 }], lines: [[0, 1], [1, 2], [2, 4], [4, 3], [3, 0], [0, 2]], difficulty: 35 },
+            { nodes: [{ x: 50, y: 10 }, { x: 20, y: 50 }, { x: 80, y: 50 }, { x: 50, y: 90 }], lines: [[0, 1], [1, 2], [2, 0], [1, 3], [3, 2]], difficulty: 40 },
+            { nodes: [{ x: 20, y: 20 }, { x: 50, y: 50 }, { x: 20, y: 80 }, { x: 80, y: 20 }, { x: 80, y: 80 }], lines: [[0, 1], [1, 2], [2, 0], [3, 1], [1, 4], [4, 3]], difficulty: 45 },
+            { nodes: [{ x: 50, y: 10 }, { x: 20, y: 50 }, { x: 80, y: 50 }, { x: 50, y: 90 }, { x: 50, y: 50 }], lines: [[0, 1], [1, 3], [3, 2], [2, 0], [0, 4], [4, 3]], difficulty: 50 },
+            { nodes: [{ x: 50, y: 10 }, { x: 85, y: 35 }, { x: 70, y: 75 }, { x: 30, y: 75 }, { x: 15, y: 35 }], lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [0, 2], [2, 4]], difficulty: 55 },
+            { nodes: [{ x: 50, y: 10 }, { x: 80, y: 30 }, { x: 80, y: 70 }, { x: 50, y: 90 }, { x: 20, y: 70 }, { x: 20, y: 30 }], lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0], [0, 2], [2, 4], [4, 0]], difficulty: 60 },
+            { nodes: [{ x: 50, y: 10 }, { x: 85, y: 35 }, { x: 70, y: 75 }, { x: 30, y: 75 }, { x: 15, y: 35 }, { x: 50, y: 45 }], lines: [[0, 2], [2, 4], [4, 1], [1, 3], [3, 0], [0, 5], [2, 5], [4, 5]], difficulty: 70 },
+            { nodes: [{ x: 30, y: 25 }, { x: 70, y: 25 }, { x: 85, y: 45 }, { x: 85, y: 75 }, { x: 70, y: 90 }, { x: 30, y: 90 }, { x: 15, y: 75 }, { x: 15, y: 45 }], lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0], [0, 2], [2, 4], [4, 6], [6, 0]], difficulty: 80 },
+            { nodes: [{ x: 50, y: 15 }, { x: 20, y: 50 }, { x: 50, y: 40 }, { x: 80, y: 50 }, { x: 35, y: 75 }, { x: 65, y: 75 }, { x: 50, y: 90 }], lines: [[0, 1], [1, 2], [2, 0], [0, 3], [3, 2], [1, 4], [4, 6], [6, 5], [5, 3], [2, 4]], difficulty: 85 },
+            { nodes: [{ x: 50, y: 10 }, { x: 65, y: 40 }, { x: 95, y: 45 }, { x: 75, y: 65 }, { x: 80, y: 95 }, { x: 50, y: 80 }, { x: 20, y: 95 }, { x: 25, y: 65 }, { x: 5, y: 45 }, { x: 35, y: 40 }], lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 0], [1, 3], [3, 5], [5, 7], [7, 9], [9, 1]], difficulty: 90 },
+            { nodes: [{ x: 25, y: 40 }, { x: 45, y: 20 }, { x: 65, y: 40 }, { x: 25, y: 75 }, { x: 65, y: 75 }, { x: 85, y: 40 }, { x: 85, y: 75 }], lines: [[0, 1], [1, 2], [2, 4], [4, 3], [3, 0], [0, 2], [2, 5], [5, 6], [6, 4], [4, 2]], difficulty: 95 },
+            { nodes: [{ x: 20, y: 20 }, { x: 50, y: 20 }, { x: 80, y: 20 }, { x: 20, y: 50 }, { x: 50, y: 50 }, { x: 80, y: 50 }, { x: 20, y: 80 }, { x: 50, y: 80 }, { x: 80, y: 80 }], lines: [[0, 1], [1, 2], [3, 4], [4, 5], [6, 7], [7, 8], [0, 3], [3, 6], [1, 4], [4, 7], [2, 5], [5, 8], [1, 5]], difficulty: 100 },
+            { nodes: [{ x: 50, y: 10 }, { x: 80, y: 30 }, { x: 80, y: 70 }, { x: 50, y: 90 }, { x: 20, y: 70 }, { x: 20, y: 30 }], lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0], [0, 2], [2, 4], [4, 0], [1, 3], [3, 5], [5, 1]], difficulty: 110 },
+            { nodes: [{ x: 50, y: 20 }, { x: 30, y: 40 }, { x: 20, y: 65 }, { x: 40, y: 85 }, { x: 60, y: 85 }, { x: 80, y: 65 }, { x: 70, y: 40 }], lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 0], [0, 3], [3, 6], [1, 4], [4, 0]], difficulty: 120 },
+            { nodes: [{ x: 10, y: 70 }, { x: 50, y: 70 }, { x: 70, y: 90 }, { x: 30, y: 90 }, { x: 50, y: 30 }, { x: 30, y: 45 }, { x: 70, y: 45 }, { x: 90, y: 70 }], lines: [[0, 1], [1, 2], [2, 3], [3, 0], [1, 4], [4, 5], [5, 6], [6, 4], [1, 7], [7, 2]], difficulty: 130 },
+            { nodes: [{ x: 50, y: 50 }, { x: 20, y: 20 }, { x: 50, y: 10 }, { x: 80, y: 20 }, { x: 20, y: 80 }, { x: 50, y: 90 }, { x: 80, y: 80 }], lines: [[0, 1], [1, 2], [2, 0], [0, 3], [3, 2], [0, 4], [4, 5], [5, 0], [0, 6], [6, 5]], difficulty: 150 }
         ];
 
-        function scale(coord) {
-            return canvasPadding + coord * scaleFactor;
-        }
+        function scale(coord) { return canvasPadding + coord * scaleFactor; }
 
         function drawGuideLines() {
             const level = levels[currentLevelIndex];
@@ -401,7 +251,6 @@
 
         function drawPlayerTrace() {
             if (!levels[currentLevelIndex] || playerPath.length < 1) return;
-
             const traceColor = '#ff00ff';
             ctx.strokeStyle = traceColor;
             ctx.lineWidth = PLAYER_LINE_WIDTH;
@@ -409,7 +258,6 @@
             ctx.lineJoin = 'round';
             ctx.shadowColor = traceColor;
             ctx.shadowBlur = 15;
-
             ctx.beginPath();
             const firstNode = levels[currentLevelIndex].nodes[playerPath[0]];
             ctx.moveTo(scale(firstNode.x), scale(firstNode.y));
@@ -418,7 +266,6 @@
                 ctx.lineTo(scale(node.x), scale(node.y));
             }
             ctx.stroke();
-
             if (isDragging && livePathEnd) {
                 const lastNode = levels[currentLevelIndex].nodes[playerPath[playerPath.length - 1]];
                 ctx.beginPath();
@@ -426,7 +273,6 @@
                 ctx.lineTo(livePathEnd.x, livePathEnd.y);
                 ctx.stroke();
             }
-
             ctx.shadowBlur = 0;
         }
 
@@ -449,12 +295,10 @@
         function updateUI() {
             if (currentLevelIndex >= levels.length) {
                 levelIndicator.textContent = "All Levels Done!";
-                levelIndicator.style.color = '';
                 startOverButton.style.display = 'inline-block';
                 resetButton.style.display = 'none';
             } else {
                 levelIndicator.textContent = `Level ${currentLevelIndex + 1}`;
-                levelIndicator.style.color = '';
                 startOverButton.style.display = 'none';
                 resetButton.style.display = 'block';
             }
@@ -470,14 +314,12 @@
             isDragging = false;
             isTransitioning = false;
             levelCompleted = false;
-            
             const level = levels[currentLevelIndex];
             level.lines.forEach(line => {
                 const [n1, n2] = line;
                 availableLines.push({ from: n1, to: n2 });
                 availableLines.push({ from: n2, to: n1 });
             });
-
             updateUI();
         }
 
@@ -495,7 +337,6 @@
             const isTouch = !!evt.touches;
             const clientX = isTouch ? evt.touches[0].clientX : evt.clientX;
             const clientY = isTouch ? evt.touches[0].clientY : evt.clientY;
-
             const x = (clientX - rect.left) * (canvas.width / rect.width);
             const y = (clientY - rect.top) * (canvas.height / rect.height);
             return { x, y };
@@ -509,9 +350,7 @@
                 const node = level.nodes[i];
                 const dx = pos.x - scale(node.x);
                 const dy = pos.y - scale(node.y);
-                if (Math.sqrt(dx * dx + dy * dy) < tol) {
-                    return i;
-                }
+                if (Math.sqrt(dx * dx + dy * dy) < tol) return i;
             }
             return -1;
         }
@@ -527,7 +366,6 @@
             if (isTransitioning || levelCompleted) return;
             const pos = getMousePos(evt);
             const nodeIndex = getNodeAtPos(pos);
-
             if (nodeIndex !== -1) {
                 playerPath = [nodeIndex];
                 isDragging = true;
@@ -538,19 +376,15 @@
         function handleInputMove(evt) {
             if (!isDragging || isTransitioning || levelCompleted) return;
             evt.preventDefault();
-
             const pos = getMousePos(evt);
             livePathEnd = pos;
-
             const targetNodeIndex = getNodeAtPos(pos);
             const lastNode = playerPath[playerPath.length - 1];
-
             if (targetNodeIndex !== -1 && targetNodeIndex !== lastNode) {
                 if (isConnectionValid(lastNode, targetNodeIndex)) {
                     const lineId = `${Math.min(lastNode, targetNodeIndex)}-${Math.max(lastNode, targetNodeIndex)}`;
                     tracedLines.add(lineId);
                     playerPath.push(targetNodeIndex);
-                    
                     if (tracedLines.size === levels[currentLevelIndex].lines.length) {
                         levelCompleted = true;
                         handleWin();
@@ -562,11 +396,9 @@
         function handleInputUp(evt) {
             if (isTransitioning || levelCompleted) return;
             evt.preventDefault();
-            
             if (isDragging && tracedLines.size < levels[currentLevelIndex].lines.length) {
                 handleGameOver();
             }
-            
             isDragging = false;
             livePathEnd = null;
         }
@@ -612,45 +444,37 @@
             const badgeCanvas = document.createElement('canvas');
             badgeCanvas.width = W; badgeCanvas.height = H;
             const bctx = badgeCanvas.getContext('2d');
-
             const grad = bctx.createLinearGradient(0, 0, 0, H);
             grad.addColorStop(0, '#1b2735'); grad.addColorStop(1, '#090a0f');
             bctx.fillStyle = grad;
             bctx.fillRect(0, 0, W, H);
-
             bctx.lineWidth = 4;
             bctx.strokeStyle = '#00ffff';
             bctx.strokeRect(2, 2, W - 4, H - 4);
-
             const icon = new Image();
             icon.crossOrigin = "Anonymous";
             icon.src = 'https://raw.githubusercontent.com/Mirjan-Ali-Sha/tracepuzzle/main/TracePuzzle-icon.png';
             icon.onload = () => {
                 bctx.drawImage(icon, 25, 90, 100, 100);
-
                 bctx.font = "bold 36px Orbitron, sans-serif";
                 bctx.textAlign = 'center';
                 bctx.fillStyle = '#00ffff';
                 bctx.shadowColor = '#00ffff';
                 bctx.shadowBlur = 10;
                 bctx.fillText("TracePuzzle", W / 2, 60);
-
                 bctx.shadowBlur = 5;
                 bctx.font = "22px Orbitron, sans-serif";
                 bctx.textAlign = 'left';
                 bctx.fillStyle = '#ffffff';
                 bctx.fillText(`Player: ${playerName}`, 160, 130);
-
                 bctx.font = "18px Orbitron, sans-serif";
                 bctx.fillStyle = '#ff00ff';
                 const levelsCompleted = Math.min(currentLevelIndex, levels.length);
                 bctx.fillText(`Score: ${totalScore}`, 160, 165);
                 bctx.fillText(`Levels Completed: ${levelsCompleted}`, 160, 195);
-
                 bctx.font = "14px Orbitron, sans-serif";
                 bctx.fillStyle = 'rgba(255,255,255,0.8)';
                 bctx.fillText(`Game by: Mirjan Ali Sha`, 160, 230);
-
                 const link = document.createElement('a');
                 link.download = `TracePuzzle-Badge-${playerName}.png`;
                 link.href = badgeCanvas.toDataURL('image/png');
@@ -671,15 +495,39 @@
             isTransitioning = false;
         });
 
+        // ✅ FIXED RESET BUTTON - GUARANTEED TO WORK
         resetButton.addEventListener('click', () => { 
-            if (confirm('Reset all progress and restart from Level 1?')) {
+            if (confirm('This will delete ALL saved progress and restart the game. Continue?')) {
+                // Clear all storage
                 try {
                     localStorage.clear();
                     sessionStorage.clear();
-                    window.location.href = window.location.href.split('?')[0] + '?t=' + Date.now();
+                    
+                    // Clear cookies
+                    document.cookie.split(";").forEach(cookie => {
+                        document.cookie = cookie.replace(/^ +/, "").replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+                    });
+                    
+                    // Clear Service Worker cache
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.getRegistrations().then(registrations => {
+                            registrations.forEach(registration => registration.unregister());
+                        });
+                    }
+                    
+                    if ('caches' in window) {
+                        caches.keys().then(names => {
+                            names.forEach(name => caches.delete(name));
+                        });
+                    }
                 } catch(e) {
-                    location.reload(true);
+                    console.error('Storage clear error:', e);
                 }
+                
+                // Force hard reload
+                setTimeout(() => {
+                    window.location.href = window.location.origin + window.location.pathname + '?nocache=' + Date.now();
+                }, 100);
             }
         });
 
@@ -694,9 +542,7 @@
         function animate(ts) {
             const delta = ts - lastTime || 0; lastTime = ts;
             pulse += delta * 0.002;
-
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             if (currentLevelIndex < levels.length) {
                 drawGuideLines();
                 drawPlayerTrace();
@@ -711,7 +557,6 @@
                 ctx.fillText('YOU WIN!', canvas.width / 2, canvas.height / 2);
                 ctx.shadowBlur = 0;
             }
-
             requestAnimationFrame(animate);
         }
 
@@ -734,7 +579,7 @@
 
             if ('serviceWorker' in navigator) {
                 const swCode = `
-                    const CACHE_NAME = 'tracepuzzle-cache-v15';
+                    const CACHE_NAME = 'tracepuzzle-cache-v16';
                     const urlsToCache = [
                         '${window.location.href}',
                         'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap',
